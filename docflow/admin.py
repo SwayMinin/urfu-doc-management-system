@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Department, EducationLevel, Application
+from .models import *
 
-for model in [Department, EducationLevel, Application]:
+for model in [Department, EducationLevel, Application, Comment, Document]:
     admin.site.register(model)
