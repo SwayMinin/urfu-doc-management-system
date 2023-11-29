@@ -124,7 +124,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows comments to be created and assigned.
     """
-    queryset = Comment.objects.all().order_by('created_date')
+    queryset = Comment.objects.all()  # .order_by('created_date')
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
