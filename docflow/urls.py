@@ -4,12 +4,22 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'applications', views.ApplicationViewSet)
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+prefix_viewset = [
+    (r'applications', views.ApplicationViewSet),
+    (r'departments', views.DepartmentViewSet),
+    (r'courses', views.CourseViewSet),
+    (r'study-levels', views.StudyLevelViewSet),
+    (r'documents', views.DocumentViewSet),
+    (r'comments', views.CommentViewSet),
+    (r'users', views.UserViewSet),
+    (r'groups', views.GroupViewSet),
+]
+for prefix, viewset in prefix_viewset:
+    router.register(prefix, viewset)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', views.index, name='index'),
+    path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    # path('', views.index, name='index'),
+    path('api/documents/<int:pk>/download/', views.DownloadDocumentAPIView.as_view(), name='download-document'),
 ]
