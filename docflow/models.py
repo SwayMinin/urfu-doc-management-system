@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, User
 from django.core.validators import MinLengthValidator
 from django.db import models
 
@@ -28,17 +28,26 @@ class Course(models.Model):
 
 
 class Document(models.Model):
-    file = models.FileField(upload_to="documents/%Y/%m/%d", validators=[validate_file_extension])
+    file = models.FileField(upload_to='documents/%Y/%m/%d', validators=[validate_file_extension])
     # если нужно ограничить размер файла https://stackoverflow.com/a/35321718/22996061
 
     def __str__(self):
         return self.file.name
 
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    father_name = models.CharField(max_length=40, null=True, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=False)
+
+    def __str__(self):
+        return f'Профиль {self.user.last_name} {self.user.first_name} {self.father_name}'
+
+
 class Comment(models.Model):
     text = models.TextField()
 
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, editable=False)
+    author = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, editable=False)
     created_date = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
@@ -59,7 +68,7 @@ class Application(models.Model):
     student_course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True)
 
     last_change_date = models.DateTimeField(auto_now=True)
-    last_change_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
+    last_change_user = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
     created_date = models.DateTimeField(auto_now_add=True, editable=False)
 
     documents = models.ManyToManyField(Document, blank=True)
@@ -72,15 +81,3 @@ class Application(models.Model):
         if self.student_father_name is not None:
             student_full_name += f' {self.student_father_name}'
         return f'Заявка {student_full_name} от {self.created_date.date()}'
-
-
-# TODO добавить юзеру новые поля по гайдам GPT
-class UserTest(models.Model):
-    login = models.CharField(max_length=150, unique=True)
-    password = models.CharField(max_length=150)
-    email = models.EmailField(max_length=150)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    father_name = models.CharField(max_length=100, null=True, blank=True)
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
-    is_admin = models.BooleanField(default=False)

@@ -1,0 +1,33 @@
+{% extends "docflow/base.html" %}
+{% block title %} Сервис документооборота {% endblock title%}
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-4">Добро пожаловать!</h1>
+        <p class="lead">
+            Это <b>система логина и регистрации</b>, здесь будет главная информация для пользователя системы.
+        </p>
+        <hr class="my-4">
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="#" role="button">Кнопка 1</a>
+            <a class="btn btn-primary btn-lg" href="#" role="button">Кнопка 2</a>
+        </p>
+    </div>
+
+    <nav class="navbar navbar-light bg-light">
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Будущий фильтр" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Искать</button>
+      </form>
+    </nav>
+    
+    <h2 class="my-2">Главная страница api: <a href="http://127.0.0.1:8000/api">http://127.0.0.1:8000/api</a></h2>
+    <ul class="list-group">
+        {% for item in data %}
+            <li class="list-group-item">
+                <strong>Key:</strong> {{ item.key }} <br>
+                <strong>Value:</strong> <a href="{{ item.value }}">{{ item.value }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock content %}

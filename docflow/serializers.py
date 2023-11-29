@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
-from .models import Application, Comment, Document, Department, Course, StudyLevel
+from .models import Application, Comment, Document, Department, Course, StudyLevel, Profile
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -13,9 +13,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class ApplicationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Application
-        fields = ['url', 'current_department', 'student_last_name', 'student_first_name', 'student_father_name',
-                  'student_passport', 'student_course', 'student_id_number', 'student_group_number',
-                  'documents', 'comments', 'is_archived', 'last_change_user', 'last_change_date', 'created_date']
+        fields = '__all__'
 
 
 class CourseSerializer(serializers.HyperlinkedModelSerializer):
@@ -39,6 +37,12 @@ class DocumentSerializer(serializers.HyperlinkedModelSerializer):
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Comment
+        fields = '__all__'
+
+
+class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Profile
         fields = '__all__'
 
 

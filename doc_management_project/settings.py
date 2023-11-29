@@ -125,3 +125,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
+
+# Login information
+
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 10  # дней пользователю не нужно входить заново
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = 'login'
