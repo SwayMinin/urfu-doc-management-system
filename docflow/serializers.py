@@ -13,7 +13,11 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class ApplicationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Application
-        fields = '__all__'
+        fields = [
+            'url', 'current_department', 'student_course', 'student_last_name', 'student_first_name',
+            'student_father_name', 'student_passport', 'student_id_number', 'student_group_number',
+            'documents', 'comments', 'is_archived'
+        ]
 
 
 class CourseSerializer(serializers.HyperlinkedModelSerializer):

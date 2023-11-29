@@ -29,6 +29,7 @@ class Course(models.Model):
 
 class Document(models.Model):
     file = models.FileField(upload_to='documents/%Y/%m/%d', validators=[validate_file_extension])
+
     # если нужно ограничить размер файла https://stackoverflow.com/a/35321718/22996061
 
     def __str__(self):
@@ -41,7 +42,7 @@ class Profile(models.Model):
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=False)
 
     def __str__(self):
-        return f'Профиль {self.user.last_name} {self.user.first_name} {self.father_name}'
+        return f'{self.user.last_name} {self.user.first_name} {self.father_name}'
 
 
 class Comment(models.Model):
@@ -51,12 +52,15 @@ class Comment(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
-        author = self.author if self.author is not None else '[Пользователь удалён]'
-        return f'Комментарий {author} от {self.created_date}'
+        if self.author is None:
+            return f'Комментарий [Пользователь удалён] от {self.created_date.strftime("%d.%m.%Y %H:%M:%S")}'
+        full_name = f'{self.author.user.last_name} {self.author.user.first_name} {self.author.father_name}'
+        date = self.created_date.strftime("%d.%m.%Y %H:%M:%S")
+        return f'Комментарий {full_name} ({self.author.user.email}, {self.author.department.name}) от {date}'
 
 
 class Application(models.Model):
-    current_department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
+    current_department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
     student_last_name = models.CharField(max_length=100)
     student_first_name = models.CharField(max_length=100)
@@ -71,7 +75,7 @@ class Application(models.Model):
     last_change_user = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
     created_date = models.DateTimeField(auto_now_add=True, editable=False)
 
-    documents = models.ManyToManyField(Document, blank=True)
+    documents = models.ManyToManyField(Document)
     comments = models.ManyToManyField(Comment, blank=True)
 
     is_archived = models.BooleanField(default=False)
