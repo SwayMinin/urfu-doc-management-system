@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.views import LoginView
 from django.http import FileResponse
 from django.shortcuts import render, redirect
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -100,7 +100,12 @@ class StudyLevelViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class DocumentViewSet(viewsets.ModelViewSet):
+# class DocumentViewSet(viewsets.ModelViewSet):
+class DocumentViewSet(mixins.CreateModelMixin,
+                      mixins.RetrieveModelMixin,
+                      mixins.DestroyModelMixin,
+                      mixins.ListModelMixin,
+                      viewsets.GenericViewSet):
     """
     API endpoint that allows documents to be created and deleted.
     """
@@ -120,7 +125,11 @@ class DownloadDocumentAPIView(APIView):
             return Response({"message": "Document not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
-class CommentViewSet(viewsets.ModelViewSet):
+class CommentViewSet(mixins.CreateModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.DestroyModelMixin,
+                     mixins.ListModelMixin,
+                     viewsets.GenericViewSet):
     """
     API endpoint that allows comments to be created and assigned.
     """
